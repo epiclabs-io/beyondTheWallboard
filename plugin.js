@@ -48,7 +48,7 @@ ReloadPlugin.prototype.startTimer = function () {
 
 ReloadPlugin.prototype.getActiveTab = function (cb) {
   chrome.tabs.query({
-    'active': true, 
+    'active': true,
     'windowId': self.currentWindow
   }, function (tab) {
     cb(tab[0]);
@@ -71,9 +71,8 @@ ReloadPlugin.prototype.loadNextTab = function () {
 
     if (nextTab.length > 0) {
       self.activateTab(nextTab[0]);
-      console.log("CURRENT TAB ID: ", self.currentTab.id);
       if (self.shouldReloadTab(self.currentTab.id)) {
-        chrome.tabs.onUpdated.addListener(function tabLoadComplete (tabId, info, t) {
+        chrome.tabs.onUpdated.addListener(function tabLoadComplete(tabId, info, t) {
           if (info.status === "complete") {
             chrome.tabs.onUpdated.removeListener(tabLoadComplete);
             setTabActive();
@@ -88,19 +87,42 @@ ReloadPlugin.prototype.loadNextTab = function () {
 ReloadPlugin.prototype.shouldReloadTab = function (id) {
   var self = this;
   return (self.tabReload && self.reloadTabIds.length === 0)
-        || (self.reloadTabIds.indexOf(id) > -1);
+    || (self.reloadTabIds.indexOf(id) > -1);
 };
 
 ReloadPlugin.prototype.activateTab = function (tab) {
   var self = this;
-  function setTabActive () {
+  function setTabActive() {
     chrome.tabs.update(tab.id, { active: true }, function () {
       self.startTimer();
     });
   }
   setTabActive();
+  setTabTitle(tab.id, tab.title);
+
 };
 
 ReloadPlugin.prototype.destroy = function () {
   self.timer = null;
 };
+
+function setTabTitle(id, title) {
+  var config = {
+    title: title,
+    classOptions: {
+      position: "fixed",
+      background: "rgba(0,0,0,0.8)",
+      color: "white",
+      width: "600px",
+      border: "3px solid #73AD21",
+      zIndex: 9999,
+      fontSize: "30px"
+    }
+  };
+  chrome.tabs.executeScript(id, {
+    code: 'var config = ' + JSON.stringify(config)
+  }, function () {
+    chrome.tabs.executeScript(id, { file: 'content_script.js' }, (results) => {
+    });
+  });
+}
