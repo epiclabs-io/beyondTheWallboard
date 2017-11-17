@@ -1,29 +1,12 @@
 <html>
 <head>
-  <title>Options :: Revolver - Tabs</title>
-  <style type="text/css">
-    body {font-family: arial, sans-serif;margin:2em;background-color:#f1f1f1; font-size: 16px;}
-    div#topline {background-image:url('revolver_t_48.png');background-repeat: no-repeat;padding:0 5px 5px 55px;}
-    h1 {margin:0;padding:0;letter-spacing:-2px;}
-    span.byline {font-size:.7em;color:#999;}
-    span.byline a {color:#777;}
-    input {font-size:.8em;border:1px solid #ccc;padding:3px;}
-    label {font-size:.8em;}
-    span.example {font-size:.7em;color:#999;display:block;}
-    div#settings {margin:0 2em;background-color: #ffffff;border: 1px solid #ccc;border-radius: 10px 10px;padding: 10px 30px 30px 30px;}
-    div#settings p {border-bottom: 1px dotted #ccc;padding-bottom:3px;}
-    span#status, span#status2 {color:#ff6103;padding:0 1em;font-weight:bold;font-size:10px;}
-    div.saveheader {margin:.5em 2em .5em 0;text-align:right;}
-    p.thanks {font-size:.8em;margin:2em 0;}
-    ul { list-style: none; }
-  </style>
+  <title>Beyond the Wallboard options</title>
+  <link href="resources/css/main.css" rel="stylesheet" type="text/css">
 </head>
   <body>
-    <div id="topline">
-      <h1>Revolver - Tabs</h1>
-      <span class="byline">by <a href="http://www.buildcontext.com/">Ben Hedrington</a> Twitter: <a href="http://twitter.com/benhedrington">@benhedrington</a></span>
-      <div class="saveheader"><span id="status"></span><button id="savetop" class="save-btn">Save</button></div>
-    </div>
+
+    <div id="topbar"></div>
+
     <div id="settings">
       <p>
         <label for="seconds">Seconds:</label> 
@@ -60,7 +43,9 @@
       <button id="save" class="save-btn">Save</button><span id="status2"></span>
     </div>
 
-    <p class="thanks">Special thanks for <a href="https://code.google.com/p/revolver-chrome-extensions/">open source code contributions</a> from Fred Emmott and Aurimas Liutikas.</p>
+    <div id="credits">
+      <p>By Lucas Bernalte &lt;lucas@epiclabs.io&gt; & Adrian Caballero &lt;adrian@epiclabs.io&gt;</p>
+    </div>
 
     <script src="options_script.js"></script>
   </body>
