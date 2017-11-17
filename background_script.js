@@ -18,8 +18,29 @@ function activeWindowChange (id) {
   updateBadgeForInstance(getInstance(id));
 }
 
+function loadJSON(path, success, error) {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        if (success)
+          success(JSON.parse(xhr.responseText));
+      } else {
+        if (error)
+          error(xhr);
+      }
+    }
+  };
+  xhr.open("GET", path, true);
+  xhr.send();
+}
+
 function init (config) {
   globalConfig = config;
+  loadJSON('config.json',
+    function(data) { console.log(data); },
+    function(xhr) { console.error(xhr); }
+  );
   chrome.windows.getAll(function (windows) {
     [].forEach.call(windows, function (win) {
       var p = instances[win.id.toString()] = new ReloadPlugin(config);

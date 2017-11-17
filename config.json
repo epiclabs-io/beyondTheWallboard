@@ -1,0 +1,20 @@
+{
+    "general": {
+        "timeInterval": 10,
+        "autoStart": false,
+        "refreshWhenLeave": true,
+        "rotateOnlyWhenInactive": true
+    },
+    "tabs": 
+        [{
+            "url": "http://epiclabs.atlassian.net/",
+            "auth": null,
+            "timeInterval": 10,
+            "refreshWhenLeave": true
+        }, {
+            "url": "http://epiclabs.io/",
+            "auth": null,
+            "timeInterval": 10,
+            "refreshWhenLeave": true
+        }]
+}
