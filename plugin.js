@@ -7,7 +7,7 @@ var ReloadPlugin = function (settings) {
     chrome.tabs.get(activeInfo.tabId, function (t) {
       self.currentTab = t;
       if (self.isGoing) {
-        self.startTimer();
+        self.startTimer(t.id);
       }
     });
   });
@@ -23,13 +23,17 @@ ReloadPlugin.prototype.update = function (settings) {
   self.reloadTabIds = settings.reloadTabIds || [];
 };
 
+ReloadPlugin.prototype.updateTab = function (settings, tab) {
+  var self = this;
+  self.timeDelay = settings.tabs[tab.id].timeInterval;
+}
+
 ReloadPlugin.prototype.start = function () {
   var self = this;
   self.isGoing = true;
   self.getActiveTab(function (tab) {
     self.currentTab = tab;
-    self.startTimer();
-    console.log(tab);
+    self.startTimer(tab.id);
   });
 };
 
@@ -39,12 +43,18 @@ ReloadPlugin.prototype.stop = function () {
   clearTimeout(self.timer);
 };
 
-ReloadPlugin.prototype.startTimer = function () {
+ReloadPlugin.prototype.startTimer = function (id) {
   var self = this;
   clearTimeout(self.timer);
-  self.timer = setTimeout(function () {
-    self.loadNextTab();
-  }, self.timeDelay * 1000);
+  chrome.storage.sync.get(null, function (items) {
+    var allKeys = Object.keys(items);
+  });
+  chrome.storage.sync.get(id + "", function (tab) {
+    var timeDelay = tab[Object.keys(tab)[0]].timeInterval || self.timeDelay;
+    self.timer = setTimeout(function () {
+      self.loadNextTab();
+    }, timeDelay * 1000);
+  });
 };
 
 ReloadPlugin.prototype.getActiveTab = function (cb) {
@@ -64,7 +74,6 @@ ReloadPlugin.prototype.loadNextTab = function () {
     if (ix >= tabs.length) {
       ix = 0;
     }
-    console.log(self.currentWindow, ix, tabs);
 
     var nextTab = tabs.filter(function (t) {
       return t.index === ix;
@@ -95,7 +104,7 @@ ReloadPlugin.prototype.activateTab = function (tab) {
   var self = this;
   function setTabActive() {
     chrome.tabs.update(tab.id, { active: true }, function () {
-      self.startTimer();
+      self.startTimer(tab.id);
     });
   }
   setTabActive();
@@ -107,23 +116,30 @@ ReloadPlugin.prototype.destroy = function () {
 };
 
 function setTabConfig(id, title) {
-  var config = {
-    title: title,
-    classOptions: {
-      position: "fixed",
-      background: "rgba(0,0,0,0.8)",
-      color: "white",
-      width: "600px",
-      border: "3px solid #73AD21",
-      zIndex: 9999,
-      fontSize: "30px"
-    }
-  };
-  chrome.tabs.executeScript(id, {
-    code: 'var config = ' + JSON.stringify(config)
-  }, () => {
-    chrome.tabs.executeScript(id, { file: 'content_script.js' }, (results) => {
-      // nothing to do?
+  chrome.storage.sync.get(id + "", function (tab) {
+    var postitTitle = tab[Object.keys(tab)[0]].postitTitle;
+    var config = {
+      title: postitTitle.customTitle || title,
+      classOptions: {
+        background: postitTitle.background || "rgba(0,0,0,0.8)",
+        color: postitTitle.color || "white",
+        width: postitTitle.width || "auto",
+        border: postitTitle.border || "3px solid #73AD21",
+        top: postitTitle.top || "10px",
+        left: postitTitle.left || "10px",
+        fontSize: postitTitle.fontSize || "30px",
+      }
+    };
+  
+    chrome.tabs.executeScript(id, {
+      code: 'var config = ' + JSON.stringify(config)
+    }, () => {
+      chrome.tabs.executeScript(id, { file: 'content_script.js' }, (results) => {
+        // nothing to do?
+      });
     });
+  
   });
+
+  
 }

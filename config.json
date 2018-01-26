@@ -9,21 +9,22 @@
         [{
             "url": "http://epiclabs.atlassian.net/",
             "auth": null,
-            "timeInterval": 15,
+            "timeInterval": 3,
             "postitTitle": {
                 "color": "black",
                 "top": "10px",
                 "left": "10px",
                 "border": "1px solid black",
-                "background": "green"
-            },
-            "customTitle": "Atlassian",
-            "timeInterval": 20
+                "background": "red",
+                "customTitle": "Atlassian",
+                "fontSize": "40px"
+            }
         }, {
             "url": "http://epiclabs.io/",
             "auth": null,
             "refreshWhenLeave": false,
             "postitTitle": {
+                "width": "600px",
                 "color": "black",
                 "top": "10px",
                 "left": "10px",

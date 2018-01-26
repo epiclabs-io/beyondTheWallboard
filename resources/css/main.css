@@ -89,15 +89,3 @@ ul {
   color: darkgray;
   padding-left: 30px;
 }
-
-.postitTitle {
-    position: fixed;
-    width: 600px;
-    z-index: 9999;
-    font-size: 30px;
-    top: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    border: 3px solid #73AD21;
-}
