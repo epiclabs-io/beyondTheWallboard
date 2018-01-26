@@ -24,4 +24,3 @@ function insertTitle() {
 }
 
 insertTitle();
-

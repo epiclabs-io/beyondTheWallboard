@@ -5,16 +5,30 @@
         "refreshWhenLeave": true,
         "rotateOnlyWhenInactive": true
     },
-    "tabs": 
+    "tabs":
         [{
             "url": "http://epiclabs.atlassian.net/",
             "auth": null,
-            "timeInterval": 10,
-            "refreshWhenLeave": true
+            "timeInterval": 15,
+            "postitTitle": {
+                "color": "black",
+                "top": "10px",
+                "left": "10px",
+                "border": "1px solid black",
+                "background": "green"
+            },
+            "customTitle": "Atlassian",
+            "timeInterval": 20
         }, {
             "url": "http://epiclabs.io/",
             "auth": null,
-            "timeInterval": 10,
-            "refreshWhenLeave": true
+            "refreshWhenLeave": false,
+            "postitTitle": {
+                "color": "black",
+                "top": "10px",
+                "left": "10px",
+                "border": "1px solid black",
+                "background": "green"
+            }
         }]
 }

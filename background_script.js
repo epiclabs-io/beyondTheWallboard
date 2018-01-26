@@ -38,7 +38,7 @@ function loadJSON(path, success, error) {
 function init (config) {
   globalConfig = config;
   loadJSON('config.json',
-    function(data) { console.log(data); },
+    function(data) { window.btwTabsConfig = data; },
     function(xhr) { console.error(xhr); }
   );
   chrome.windows.getAll(function (windows) {

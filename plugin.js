@@ -29,6 +29,7 @@ ReloadPlugin.prototype.start = function () {
   self.getActiveTab(function (tab) {
     self.currentTab = tab;
     self.startTimer();
+    console.log(tab);
   });
 };
 
@@ -98,15 +99,14 @@ ReloadPlugin.prototype.activateTab = function (tab) {
     });
   }
   setTabActive();
-  setTabTitle(tab.id, tab.title);
-
+  setTabConfig(tab.id, tab.title);
 };
 
 ReloadPlugin.prototype.destroy = function () {
   self.timer = null;
 };
 
-function setTabTitle(id, title) {
+function setTabConfig(id, title) {
   var config = {
     title: title,
     classOptions: {
@@ -121,8 +121,9 @@ function setTabTitle(id, title) {
   };
   chrome.tabs.executeScript(id, {
     code: 'var config = ' + JSON.stringify(config)
-  }, function () {
+  }, () => {
     chrome.tabs.executeScript(id, { file: 'content_script.js' }, (results) => {
+      // nothing to do?
     });
   });
 }
