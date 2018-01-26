@@ -108,7 +108,10 @@ function initBeyondTheWallboard() {
 
 function openTabs(config) {
   var tabs = getTabURLsFromJSON(config);
-  chrome.windows.create({ url: tabs });
+  chrome.windows.create({
+    url: tabs,
+    state: "fullscreen"
+  });
 }
 
 function getTabURLsFromJSON(config) {
