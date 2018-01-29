@@ -68,12 +68,29 @@ function updateBadgeForInstance(inst) {
   }
 }
 
+// chrome.windows.getCurrent(function (win) {
+chrome.windows.onCreated.addListener(function (win) {
+  chrome.tabs.query({
+    currentWindow: true
+  }, function (tabs) {
+    if (tabs.length == 1 && tabs[0].url.indexOf("beyondthewallboard") > -1) {
+      closeAllTabs();
+      initBeyondTheWallboard();
+    }
+  });
+});
+
+function closeAllTabs() {
+  chrome.tabs.query({}, function (tabs) {
+    for (var i = 0; i < tabs.length; i++) {
+      chrome.tabs.remove(tabs[i].id);
+    }
+  });
+}
+
 chrome.storage.sync.get(settings, init);
 chrome.browserAction.onClicked.addListener(function () {
-  chrome.windows.getCurrent(function (win) {
-    var instance = getInstance(win.id);
-    initBeyondTheWallboard();
-  });
+  initBeyondTheWallboard();
 });
 
 chrome.windows.onFocusChanged.addListener(activeWindowChange);
@@ -93,10 +110,15 @@ function initBeyondTheWallboard() {
       openTabs(config);
       chrome.windows.getCurrent(function (win) {
         storeGeneralConfig(config);
+
         addTabIDsToConfig(config, function () {
-          var instance = getInstance(win.id);
-          updateBadgeForInstance(instance);
-          instance.start();
+          chrome.storage.sync.set({ "customSettings": config }, function () {
+            var instance = getInstance(win.id);
+            instance.start();
+            updateBadgeForInstance(instance);
+          });
+
+          
         });
       });
     },
@@ -108,10 +130,13 @@ function initBeyondTheWallboard() {
 
 function openTabs(config) {
   var tabs = getTabURLsFromJSON(config);
-  chrome.windows.create({
-    url: tabs,
-    state: "fullscreen"
-  });
+  // chrome.windows.create({
+  //   url: tabs,
+  //   state: "fullscreen"
+  // });
+  for (var i = 0; i < tabs.length; i++) {
+    chrome.tabs.create({ url: tabs[i]});
+  }
 }
 
 function getTabURLsFromJSON(config) {
