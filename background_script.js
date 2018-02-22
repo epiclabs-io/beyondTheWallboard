@@ -1,10 +1,4 @@
-var settings = ['seconds',
-  'reload',
-  'inactive',
-  'autostart',
-  'noRefreshList',
-  'reloadTabIds'
-];
+var settings = ['configLocalFilePath'];
 var bg = chrome.extension.getBackgroundPage();
 
 var instances = {};
@@ -104,28 +98,26 @@ chrome.windows.onRemoved.addListener(function (id) {
 });
 
 function initBeyondTheWallboard() {
-  loadJSON('config.json',
-    function (data) {
-      config = data;
-      openTabs(config);
-      chrome.windows.getCurrent(function (win) {
-        storeGeneralConfig(config);
-
-        addTabIDsToConfig(config, function () {
-          chrome.storage.sync.set({ "customSettings": config }, function () {
+  chrome.storage.sync.get(settings, (settings) => {
+    console.log(bg.settings.configLocalFilePath);
+    loadJSON('config.json',
+      function (data) {
+        config = data;
+        openTabs(config);
+        chrome.windows.getCurrent(function (win) {
+          storeGeneralConfig(config);
+          addTabIDsToConfig(config, function () {
             var instance = getInstance(win.id);
-            instance.start();
             updateBadgeForInstance(instance);
+            instance.start();
           });
-
-          
         });
-      });
-    },
-    function (xhr) {
-      console.error(xhr);
-    }
-  );
+      },
+      function (xhr) {
+        console.error(xhr);
+      }
+    );
+  });
 }
 
 function openTabs(config) {
