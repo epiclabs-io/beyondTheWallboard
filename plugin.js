@@ -158,8 +158,5 @@ function setTabConfig(id, title) {
         // nothing to do?
       });
     });
-  
   });
-
-  
 }

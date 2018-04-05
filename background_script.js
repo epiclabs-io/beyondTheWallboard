@@ -62,7 +62,6 @@ function updateBadgeForInstance(inst) {
   }
 }
 
-// chrome.windows.getCurrent(function (win) {
 chrome.windows.onCreated.addListener(function (win) {
   chrome.tabs.query({
     currentWindow: true
@@ -122,10 +121,6 @@ function initBeyondTheWallboard() {
 
 function openTabs(config) {
   var tabs = getTabURLsFromJSON(config);
-  // chrome.windows.create({
-  //   url: tabs,
-  //   state: "fullscreen"
-  // });
   for (var i = 0; i < tabs.length; i++) {
     chrome.tabs.create({ url: tabs[i]});
   }
