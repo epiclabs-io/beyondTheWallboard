@@ -1,7 +1,7 @@
 {
     "general": {
         "timeInterval": 10,
-        "autoStart": false,
+        "autoStart": true,
         "refreshWhenLeave": true,
         "rotateOnlyWhenInactive": true
     },
@@ -22,7 +22,7 @@
         }, {
             "url": "http://epiclabs.io/",
             "auth": null,
-            "refreshWhenLeave": false,
+            "refreshWhenLeave": true,
             "postitTitle": {
                 "width": "600px",
                 "color": "black",
