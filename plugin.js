@@ -24,7 +24,7 @@ ReloadPlugin.prototype.stop = function () {
 ReloadPlugin.prototype.startTimer = function (tabId) {
   var self = this;
   var tabSettings = self.settings.tabs.filter(tab => tab.id == tabId)[0];
-  var timeDelay = tabSettings.timeInterval || self.settings.general.timeInterval;
+  var timeDelay = tabSettings && tabSettings.timeInterval ? tabSettings.timeInterval : self.settings.general.timeInterval;
   clearTimeout(self.timer);
   self.timer = setTimeout(function () {
     self.loadNextTab();
@@ -67,7 +67,7 @@ ReloadPlugin.prototype.loadNextTab = function () {
     if (nextTab.length > 0) {
       self.activateTab(nextTab[0]);
       var tabSettings = self.settings.tabs.filter(tab => tab.id == self.currentTab.id)[0];
-      if (tabSettings.refreshWhenLeave) {
+      if (tabSettings && tabSettings.refreshWhenLeave || self.settings.refreshWhenLeave) {
         chrome.tabs.onUpdated.addListener(function tabLoadComplete(tabId, info, t) {
           if (info.status === "complete") {
             chrome.tabs.onUpdated.removeListener(tabLoadComplete);
@@ -125,26 +125,28 @@ ReloadPlugin.prototype.destroy = function () {
 
 function setTabConfig(id, title, settings) {
     var tab = settings.tabs.filter(tab => tab.id == id)[0];
-    var postitTitle = tab.postitTitle;
-    if (postitTitle) {
-      var config = {
-        title: postitTitle.customTitle || title,
-        classOptions: {
-          background: postitTitle.background || "rgba(0,0,0,0.8)",
-          color: postitTitle.color || "white",
-          width: postitTitle.width || "auto",
-          border: postitTitle.border || "3px solid #73AD21",
-          top: postitTitle.top || "10px",
-          left: postitTitle.left || "10px",
-          fontSize: postitTitle.fontSize || "30px",
-        }
-      };
-    
-      chrome.tabs.executeScript(id, {
-        code: 'var config = ' + JSON.stringify(config)
-      }, () => {
-        chrome.tabs.executeScript(id, { file: 'content_script.js' }, (results) => {
+    if (tab) {
+      var postitTitle = tab.postitTitle;
+      if (postitTitle) {
+        var config = {
+          title: postitTitle.customTitle || title,
+          classOptions: {
+            background: postitTitle.background || "rgba(0,0,0,0.8)",
+            color: postitTitle.color || "white",
+            width: postitTitle.width || "auto",
+            border: postitTitle.border || "3px solid #73AD21",
+            top: postitTitle.top || "10px",
+            left: postitTitle.left || "10px",
+            fontSize: postitTitle.fontSize || "30px",
+          }
+        };
+      
+        chrome.tabs.executeScript(id, {
+          code: 'var config = ' + JSON.stringify(config)
+        }, () => {
+          chrome.tabs.executeScript(id, { file: 'content_script.js' }, (results) => {
+          });
         });
-      });
+      }
     }
 }
