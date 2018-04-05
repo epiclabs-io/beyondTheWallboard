@@ -1,10 +1,4 @@
-var settings = ['seconds',
-  'reload',
-  'inactive',
-  'autostart',
-  'noRefreshList',
-  'reloadTabIds'
-];
+var settings = ['configLocalFilePath'];
 var bg = chrome.extension.getBackgroundPage();
 
 var instances = {};
@@ -18,23 +12,6 @@ function getInstance(windowId) {
 function activeWindowChange(id) {
   currentWindow = id;
   updateBadgeForInstance(getInstance(id));
-}
-
-function loadJSON(path, success, error) {
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        if (success)
-          success(JSON.parse(xhr.responseText));
-      } else {
-        if (error)
-          error(xhr);
-      }
-    }
-  };
-  xhr.open("GET", path, true);
-  xhr.send();
 }
 
 function init(config) {
@@ -52,90 +29,92 @@ function init(config) {
   });
 
   var badgeColor = [139, 137, 137, 137];
-  chrome.browserAction.setBadgeBackgroundColor({ color: badgeColor });
+  chrome.browserAction.setBadgeBackgroundColor({
+    color: badgeColor
+  });
 }
 
 function updateBadgeForInstance(inst) {
   if (inst && inst.isGoing) {
-    chrome.browserAction.setBadgeText({ text: "\u2022" });
-    chrome.browserAction.setBadgeBackgroundColor({ color: [0, 255, 0, 100] });
-    chrome.browserAction.setTitle({ title: 'Beyond The Wallboard - Enabled' });
-  }
-  else {
-    chrome.browserAction.setBadgeText({ text: "\u00D7" });
-    chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 100] });
-    chrome.browserAction.setTitle({ title: 'Beyond The Wallboard - Disabled' });
+    chrome.browserAction.setBadgeText({
+      text: "\u2022"
+    });
+    chrome.browserAction.setBadgeBackgroundColor({
+      color: [0, 255, 0, 100]
+    });
+    chrome.browserAction.setTitle({
+      title: 'Beyond The Wallboard - Enabled'
+    });
+  } else {
+    chrome.browserAction.setBadgeText({
+      text: "\u00D7"
+    });
+    chrome.browserAction.setBadgeBackgroundColor({
+      color: [255, 0, 0, 100]
+    });
+    chrome.browserAction.setTitle({
+      title: 'Beyond The Wallboard - Disabled'
+    });
   }
 }
 
-// chrome.windows.getCurrent(function (win) {
-chrome.windows.onCreated.addListener(function (win) {
-  chrome.tabs.query({
-    currentWindow: true
-  }, function (tabs) {
-    if (tabs.length == 1 && tabs[0].url.indexOf("beyondthewallboard") > -1) {
-      closeAllTabs();
-      initBeyondTheWallboard();
-    }
-  });
-});
-
-function closeAllTabs() {
+function closeAllTabs(config) {
   chrome.tabs.query({}, function (tabs) {
     for (var i = 0; i < tabs.length; i++) {
       chrome.tabs.remove(tabs[i].id);
     }
+    createWindow(config);
   });
 }
 
-chrome.storage.sync.get(settings, init);
+function createWindow(config) {
+  var urls = config.tabs.map(tab => tab.url);
+  chrome.windows.create({url: urls}, function (win) {
+    for (var i=0; i< win.tabs.length; i++) {
+      config.tabs[i].id = win.tabs[i].id;
+    }
+      initInstance(config);
+  });
+}
+
 chrome.browserAction.onClicked.addListener(function () {
   initBeyondTheWallboard();
 });
 
 chrome.windows.onFocusChanged.addListener(activeWindowChange);
-chrome.windows.onCreated.addListener(function (win) {
-  var i = instances[win.id.toString()] = new ReloadPlugin(globalConfig);
-  i.currentWindow = win.id;
-});
-chrome.windows.onRemoved.addListener(function (id) {
-  instances[id.toString()].destroy();
-  delete instances[id.toString()];
-});
+
 
 function initBeyondTheWallboard() {
-  loadJSON('config.json',
-    function (data) {
-      config = data;
-      openTabs(config);
-      chrome.windows.getCurrent(function (win) {
-        storeGeneralConfig(config);
-
-        addTabIDsToConfig(config, function () {
-          chrome.storage.sync.set({ "customSettings": config }, function () {
-            var instance = getInstance(win.id);
-            instance.start();
-            updateBadgeForInstance(instance);
-          });
-
-          
-        });
-      });
-    },
-    function (xhr) {
-      console.error(xhr);
-    }
-  );
+  chrome.storage.sync.get('settings', (settings) => {
+    closeAllTabs(settings.settings);
+  });
 }
 
-function openTabs(config) {
+function initInstance(config) {
+  chrome.windows.getCurrent({
+    populate: true
+  }, function (win) {
+    var i = instances[win.id.toString()] = new ReloadPlugin(config);
+    i.currentWindow = win.id;
+    var instance = getInstance(win.id);
+    updateBadgeForInstance(instance);
+    instance.start(config);
+  });
+}
+
+function openTabs(config, getWindowAndInit) {
   var tabs = getTabURLsFromJSON(config);
-  // chrome.windows.create({
-  //   url: tabs,
-  //   state: "fullscreen"
-  // });
+  var count = tabs.length;
   for (var i = 0; i < tabs.length; i++) {
-    chrome.tabs.create({ url: tabs[i]});
+    chrome.tabs.create({
+      url: tabs[i]
+    }, function (tab) {
+      config.tabs[i-1].id = tab.id;
+      count--;
+      if (count == 0) {
+        getWindowAndInit();
+      }
+    });
   }
 }
 
@@ -144,25 +123,4 @@ function getTabURLsFromJSON(config) {
     return tab.url;
   });
   return tabURLs;
-}
-
-function addTabIDsToConfig(config, callback) {
-  chrome.tabs.query({
-    currentWindow: true
-  }, function (tabs) {
-    for (var i = 0; i < config.tabs.length; i++) {
-      var id = tabs[i].id;
-      config.tabs[i].id = id;
-      storeTabConfig(config, id + "", i);
-    }
-    callback();
-  });
-}
-
-function storeGeneralConfig(config) {
-  chrome.storage.sync.set({ "general": config.general });
-}
-
-function storeTabConfig(config, id, i) {
-  chrome.storage.sync.set({ [id]: config.tabs[i] });
 }

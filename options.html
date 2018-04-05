@@ -1,52 +1,30 @@
 <html>
+
 <head>
-  <title>Beyond the Wallboard options</title>
+  <title>Beyond the Wallboard</title>
   <link href="resources/css/main.css" rel="stylesheet" type="text/css">
 </head>
-  <body>
 
-    <div id="topbar"></div>
+<body>
+  <div id="topbar"></div>
 
-    <div id="settings">
-      <p>
-        <label for="seconds">Seconds:</label> 
-        <input type="text" name="seconds" id="seconds" style="width:30px;" />
-        <span class="example">The number of seconds to show a tab before switching ex. <strong>10</strong></span>
-      </p>
-      <p>
-        <label for="autostart">Auto Start:</label> 
-        <input type="checkbox" name="autostart" id="autostart">
-        <span class="example">Automatically start Revolver Tabs on browser startup.</span>
-      </p>
-      <p>
-        <label for="reload">Reload:</label> 
-        <input type="checkbox" name="reload" id="reload" />
-        <span class="example">Check this box to reload the tab each time before it is shown.</span>
-      </p>
-      <p>
-        <label for="inactive">Rotate only when inactive:</label> 
-        <input type="checkbox" name="inactive" id="inactive" />
-        <span class="example"><strong>Rotation will pause</strong> if the browser has been interacted with within 15 seconds.</span>
-      </p>
-      <div>
-        <label>Reload-able tab</label>
-        <span class="example">Checked tabs will reload before opening</span>
-        <ul id="tab-list">
+  <h1>Beyond the wallboard</h1>
 
-        </ul>
-      </div>
- <!--      <p>
-        <label for="noRefreshList">Blacklist for URLs that should not be reloaded:</label> 
-        <textarea name="noRefreshList" id="noRefreshList" rows="10" cols="80"></textarea>
-        <span class="example">The list should have full URLs, each separated by a new line</span>
-      </p> -->
-      <button id="save" class="save-btn">Save</button><span id="status2"></span>
-    </div>
+  <div id="settings">
+    <input id="configLocalFilePath" name="configLocalFilePath" type="file">
+    <button id="save" class="save-btn">Save</button>
+    <span id="status"></span>
+  </div>
 
-    <div id="credits">
-      <p>By Lucas Bernalte &lt;lbernalte@epiclabs.io&gt; & Adrian Caballero &lt;adrian@epiclabs.io&gt;</p>
-    </div>
+  <div id="current-settings">
+    <pre id="current-settings-placeholder"></pre>
+  </div>
 
-    <script src="options_script.js"></script>
-  </body>
+  <div id="credits">
+    <p>By Lucas Bernalte &lt;lbernalte@epiclabs.io&gt; &amp; Adri&aacute;n Caballero &lt;adrian@epiclabs.io&gt;</p>
+  </div>
+
+  <script src="options_script.js"></script>
+</body>
+
 </html>
