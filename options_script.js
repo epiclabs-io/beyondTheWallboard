@@ -1,30 +1,32 @@
 var bg = chrome.extension.getBackgroundPage();
-var status = document.getElementById('status');
+var newSettings = undefined;
 
-function save_options() {
-  var configLocalFilePath = document.getElementById('configLocalFilePath').value;
-  console.log(configLocalFilePath);
-
-  status.innerHTML = 'Saving Options';
-
-  settings = {
-    'configLocalFilePath': configLocalFilePath,
-  };
-
-  chrome.windows.getCurrent(function (win) {
-    var inst = bg.getInstance(win.id);
-    inst.update(settings);
+function updateCurrentSettings() {
+  chrome.storage.sync.get('settings', function (result) {
+    if (Object.keys(result).length == 0) {
+      document.getElementById('current-settings-placeholder').innerHTML = 'No config available. Please load some configuration file.'
+    } else {
+        document.getElementById('current-settings-placeholder').innerHTML = JSON.stringify(result, null, 2);
+    }
   });
-
-  chrome.storage.sync.set(settings);
-  setTimeout(function () {
-    status.innerHTML = '';
-  }, 3000);
 }
 
-[].forEach.call(document.querySelectorAll('.save-btn'), function (btn) {
-  btn.addEventListener('click', save_options);
-});
+function saveOptions() {
+  var configLocalFilePath = document.getElementById('configLocalFilePath').value;
+
+  if (newSettings !== undefined) {
+    document.getElementById('status').innerHTML = 'Saving options';
+
+    chrome.storage.sync.set({ settings: newSettings }, function () {
+      updateCurrentSettings();
+      setTimeout(function () {
+        document.getElementById('status').innerHTML = '';
+      }, 2000);
+    });
+  } else {
+    document.getElementById('status').innerHTML = 'No options provided or invalid config file';
+  }
+}
 
 function onConfigLocalFilePathChange(event) {
   const files = event.target.files;
@@ -35,9 +37,17 @@ function onConfigLocalFilePathChange(event) {
 
   const reader = new FileReader();
   reader.onload = (function (event) {
-    chrome.storage.sync.set(event.target.result);
+    newSettings = JSON.parse(event.target.result);
   });
   reader.readAsText(files[0]);
 }
 
 document.getElementById('configLocalFilePath').addEventListener('change', onConfigLocalFilePathChange, false);
+
+[].forEach.call(document.querySelectorAll('.save-btn'), function (btn) {
+  btn.addEventListener('click', saveOptions);
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  updateCurrentSettings();
+});
