@@ -14,23 +14,6 @@ function activeWindowChange(id) {
   updateBadgeForInstance(getInstance(id));
 }
 
-function loadJSON(path, success, error) {
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        if (success)
-          success(JSON.parse(xhr.responseText));
-      } else {
-        if (error)
-          error(xhr);
-      }
-    }
-  };
-  xhr.open("GET", path, true);
-  xhr.send();
-}
-
 function init(config) {
   globalConfig = config;
 
@@ -102,10 +85,8 @@ chrome.windows.onFocusChanged.addListener(activeWindowChange);
 
 
 function initBeyondTheWallboard() {
-  loadJSON('config.json',
-  function (data) {
-    config = data;
-    closeAllTabs(config);
+  chrome.storage.sync.get('settings', (settings) => {
+    closeAllTabs(settings.settings);
   });
 }
 

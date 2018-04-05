@@ -125,7 +125,7 @@ ReloadPlugin.prototype.destroy = function () {
 
 function setTabConfig(id, title, settings) {
     var tab = settings.tabs.filter(tab => tab.id == id)[0];
-    var postitTitle = tab[Object.keys(tab)[0]].postitTitle;
+    var postitTitle = tab.postitTitle;
     if (postitTitle) {
       var config = {
         title: postitTitle.customTitle || title,
