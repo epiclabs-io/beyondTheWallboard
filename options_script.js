@@ -1,12 +1,6 @@
 var bg = chrome.extension.getBackgroundPage();
 var status = document.getElementById('status');
 
-document.addEventListener('DOMContentLoaded', function () {
-  chrome.storage.sync.get(bg.settings, function (settings) {
-    document.getElementById('configLocalFilePath').value = !!settings.configLocalFilePath;
-  });
-});
-
 function save_options() {
   var configLocalFilePath = document.getElementById('configLocalFilePath').value;
   console.log(configLocalFilePath);
