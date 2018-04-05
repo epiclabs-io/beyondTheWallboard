@@ -138,25 +138,27 @@ ReloadPlugin.prototype.destroy = function () {
 function setTabConfig(id, title) {
   chrome.storage.sync.get(id + "", function (tab) {
     var postitTitle = tab[Object.keys(tab)[0]].postitTitle;
-    var config = {
-      title: postitTitle.customTitle || title,
-      classOptions: {
-        background: postitTitle.background || "rgba(0,0,0,0.8)",
-        color: postitTitle.color || "white",
-        width: postitTitle.width || "auto",
-        border: postitTitle.border || "3px solid #73AD21",
-        top: postitTitle.top || "10px",
-        left: postitTitle.left || "10px",
-        fontSize: postitTitle.fontSize || "30px",
-      }
-    };
-  
-    chrome.tabs.executeScript(id, {
-      code: 'var config = ' + JSON.stringify(config)
-    }, () => {
-      chrome.tabs.executeScript(id, { file: 'content_script.js' }, (results) => {
-        // nothing to do?
+    if (postitTitle) {
+      var config = {
+        title: postitTitle.customTitle || title,
+        classOptions: {
+          background: postitTitle.background || "rgba(0,0,0,0.8)",
+          color: postitTitle.color || "white",
+          width: postitTitle.width || "auto",
+          border: postitTitle.border || "3px solid #73AD21",
+          top: postitTitle.top || "10px",
+          left: postitTitle.left || "10px",
+          fontSize: postitTitle.fontSize || "30px",
+        }
+      };
+    
+      chrome.tabs.executeScript(id, {
+        code: 'var config = ' + JSON.stringify(config)
+      }, () => {
+        chrome.tabs.executeScript(id, { file: 'content_script.js' }, (results) => {
+          // nothing to do?
+        });
       });
-    });
+    }
   });
 }
