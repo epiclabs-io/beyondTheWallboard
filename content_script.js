@@ -28,3 +28,23 @@ function insertTitle() {
 }
 
 insertTitle();
+
+function addListen(){
+   document.body.addEventListener("keyup", RenewTimeoutTime);
+   document.body.addEventListener("scroll", RenewTimeoutTime);
+   document.body.addEventListener("mousemove", RenewTimeoutTime);
+}
+
+document.addEventListener('DOMContentLoaded', addListen, false);  //this is the important bit
+
+function RenewTimeoutTime(){
+   var pageName = window.location.href;
+   var currentTime = new Date();
+   var time = currentTime.getTime();    //i replaced the time just to be neat
+   localStorage.setItem("inTimeout", false);
+   localStorage.setItem("AI_Timeout_Time", time + 270000);
+   console.log(localStorage.getItem("AI_Timeout_Time"));
+   chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+    console.log(response.farewell);
+  });
+}
