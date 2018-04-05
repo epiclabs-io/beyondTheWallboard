@@ -65,8 +65,9 @@ ReloadPlugin.prototype.loadNextTab = function () {
     });
 
     if (nextTab.length > 0) {
-      self.activateTab(nextTab[0]);
+      var tabIdToReload = self.currentTab.id;
       var tabSettings = self.settings.tabs.filter(tab => tab.id == self.currentTab.id)[0];
+      self.activateTab(nextTab[0]);
       if (tabSettings && tabSettings.refreshWhenLeave || self.settings.refreshWhenLeave) {
         chrome.tabs.onUpdated.addListener(function tabLoadComplete(tabId, info, t) {
           if (info.status === "complete") {
@@ -74,7 +75,7 @@ ReloadPlugin.prototype.loadNextTab = function () {
             self.setTabActive(self.currentTab);
           }
         });
-        chrome.tabs.reload(self.currentTab.id, {}, null);
+        chrome.tabs.reload(tabIdToReload, {}, null);
       }
     }
   });
