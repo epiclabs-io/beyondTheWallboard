@@ -1,5 +1,5 @@
 function insertTitle() {
-    if (config) {
+    if (typeof config !== 'undefined') {
         var div = document.createElement('div');
         var floatingTitle = document.createElement('div')
             .innerText = config.title;
