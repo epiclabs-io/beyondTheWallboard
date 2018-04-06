@@ -1,5 +1,78 @@
 # Beyond the wallboard
-Chrome extension to create a slideshow with the opened tabs.
+Chrome extension to create a slideshow with several preconfigured tabs.
+
+# Configuration example
+
+The configuration of the tabs to be opened is loaded as a JSON file from the extension configuration page.
+
+There are two main properties to be defined:
+
+1. ```general``` will define general options to be applied to all the tabs defined:
+
+    * ```timeInterval``` {number} Defines the time, in seconds, to rotate the tabs.
+
+    * ```refreshWhenLeave``` {boolean} Refresh the tabs after leave it (when rotation is done).
+
+2. ```tabs``` will contain an array defining each one of the tabs to be opened along with options related to that specifical tab:
+
+    * ```url``` {string} The URL to be loaded.
+
+    * ```timeInterval``` {number} Defines the time, in seconds, to rotate this particular tab. This overrides the ```timeInterval``` defined in ```general```.
+
+    * ```postitTitle``` {Object} Allows to place the title of the page or a custom title as a post-it, usefull when the browser is in fullscreen and you cannot see the title of the page. If this is not provided, the post-it will not be placed. Available properties are:
+
+        * ```width``` {string} Defines the width of the post-it as in CSS. If this is not provided, will be automatically adjusted.
+
+        * ```color``` {string} The color of the text on the post-it as in CSS. If this is not provided, color ```white``` will be used.
+
+        * ```top``` {string} The distance of the post-it to the top of the page as in CSS. If this is not provided, ```10px``` will be used.
+
+        * ```left``` {string} The distance of the post-it to the left of the page as in CSS. If this is not provied, ```10px``` will be used.
+
+        * ```border``` {string} Definition of the border of the post-it as in CSS. If this is not provided, ```3px solid #73AD21``` will be used.
+
+        * ```background``` {string} Definition of the background of the post-it as in CSS. If this is not provided ```rgba(0, 0, 0, .8)``` will be used.
+
+        * ```customTitle``` {string} Definition of a custom title. If this is not provided, the default title of the page will be used.
+
+Please, refer to the example below:
+
+```json
+{
+    "general": {
+        "timeInterval": 10,
+        "refreshWhenLeave": true,
+    },
+    "tabs":
+        [{
+            "url": "https://xkcd.com/",
+            "timeInterval": 3,
+        }, {
+            "url": "http://epiclabs.io/",
+            "refreshWhenLeave": true,
+            "postitTitle": {
+                "width": "600px",
+                "color": "black",
+                "top": "10px",
+                "left": "10px",
+                "border": "1px solid black",
+                "background": "green",
+                "customTitle": "Epic Labs",
+            }
+        }, {
+            "url": "https://stackoverflow.com/",
+            "refreshWhenLeave": true,
+            "postitTitle": {
+                "width": "600px",
+                "color": "black",
+                "top": "10px",
+                "left": "10px",
+                "border": "1px solid black",
+                "background": "green",
+            }
+        }]
+}
+```
 
 ## History
 
@@ -15,6 +88,18 @@ Chrome extension to create a slideshow with the opened tabs.
 - 2017/11/17 - Added floating title to every tab. -Lucas
 - 2018/01/26 - Extending JSON config file and storing it inside window object. -Adrian
 - 2018/01/26 - Added style to Title. Loaded configuration from JSON. -Lucas
+- 2018/04/05 - Code cleanup. -Adrian
+- 2018/04/05 - Don't show customTitle when it is not configured. -Lucas
+- 2018/04/05 - Removing error from options page. -Adrian
+- 2018/04/05 - Loading the configuration from a JSON file. -Adrian
+- 2018/04/05 - Bugfixing. -Lucas
+- 2018/04/05 - Using the configuration loaded into local storage. -Adrian
+- 2018/04/05 - Solved bug when manually added new tab after init. -Adrian
+- 2018/04/05 - Fixed refreshWhenLeave issue. -Lucas
+- 2018/04/06 - Removed unused functions. -Lucas
+- 2018/04/06 - New feature: stop rotating when interacting. -Lucas
+- 2018/04/06 - Fixed check undefined variable. -Lucas
+- 2018/04/06 - Removed autostart from configuration file and updated README. -Adrian
 
 ## Authors
 
