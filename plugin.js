@@ -33,12 +33,10 @@ ReloadPlugin.prototype.startTimer = function (tabId) {
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log(sender.tab ?
-                "from a content script:" + sender.tab.url :
-                "from the extension");
-    if (request.greeting == "hello")
-      sendResponse({farewell: "goodbye"});
-    ReloadPlugin.startTimer();
+    if (request.eventCaptured) {
+      var instance = instances[sender.tab.windowId];
+      instance.startTimer(sender.tab.id);
+    }
   });
 
 ReloadPlugin.prototype.getActiveTab = function (cb) {
@@ -81,15 +79,6 @@ ReloadPlugin.prototype.loadNextTab = function () {
   });
 };
 
-function fillTabSettingsIfNotFound(tabSettings) {
-  if (!tabSettings) {
-    tabSettings = {};
-    tabSettings.refreshWhenLeave = false;
-    tabSettings.timeInterval = 10;
-    return tabSettings;
-  }
-} 
-
 ReloadPlugin.prototype.getTabSettings = function (id) {
   var self = this;
   for (var i = 0; i < self.settings.tabs.length; i++) {
@@ -126,10 +115,10 @@ ReloadPlugin.prototype.destroy = function () {
 
 function setTabConfig(id, title, settings) {
     var tab = settings.tabs.filter(tab => tab.id == id)[0];
-    if (tab) {
-      var postitTitle = tab.postitTitle;
+      var postitTitle = tab ? tab.postitTitle : undefined;
+      var config = undefined;
       if (postitTitle) {
-        var config = {
+        config = {
           title: postitTitle.customTitle || title,
           classOptions: {
             background: postitTitle.background || "rgba(0,0,0,0.8)",
@@ -149,5 +138,5 @@ function setTabConfig(id, title, settings) {
           });
         });
       }
-    }
+    
 }

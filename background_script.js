@@ -78,7 +78,17 @@ function createWindow(config) {
 }
 
 chrome.browserAction.onClicked.addListener(function () {
-  initBeyondTheWallboard();
+  chrome.windows.getCurrent({
+    populate: true
+  }, function (win) {
+    var instance = getInstance(win.id);
+    if (!instance || !instance.isGoing) {
+      initBeyondTheWallboard();
+    } else {
+      instance.stop();
+      updateBadgeForInstance(instance);
+    }
+  });
 });
 
 chrome.windows.onFocusChanged.addListener(activeWindowChange);
@@ -97,30 +107,7 @@ function initInstance(config) {
     var i = instances[win.id.toString()] = new ReloadPlugin(config);
     i.currentWindow = win.id;
     var instance = getInstance(win.id);
-    updateBadgeForInstance(instance);
     instance.start(config);
+    updateBadgeForInstance(instance);
   });
-}
-
-function openTabs(config, getWindowAndInit) {
-  var tabs = getTabURLsFromJSON(config);
-  var count = tabs.length;
-  for (var i = 0; i < tabs.length; i++) {
-    chrome.tabs.create({
-      url: tabs[i]
-    }, function (tab) {
-      config.tabs[i-1].id = tab.id;
-      count--;
-      if (count == 0) {
-        getWindowAndInit();
-      }
-    });
-  }
-}
-
-function getTabURLsFromJSON(config) {
-  var tabURLs = config.tabs.map(function (tab) {
-    return tab.url;
-  });
-  return tabURLs;
 }
