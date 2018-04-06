@@ -1,7 +1,6 @@
 {
     "general": {
         "timeInterval": 10,
-        "autoStart": true,
         "refreshWhenLeave": true,
         "rotateOnlyWhenInactive": true
     },
