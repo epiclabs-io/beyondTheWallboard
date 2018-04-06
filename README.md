@@ -41,12 +41,12 @@ Please, refer to the example below:
 {
     "general": {
         "timeInterval": 10,
-        "refreshWhenLeave": true,
+        "refreshWhenLeave": true
     },
-    "tabs":
-        [{
+    "tabs": [
+        {
             "url": "https://xkcd.com/",
-            "timeInterval": 3,
+            "timeInterval": 3
         }, {
             "url": "http://epiclabs.io/",
             "refreshWhenLeave": true,
@@ -57,7 +57,7 @@ Please, refer to the example below:
                 "left": "10px",
                 "border": "1px solid black",
                 "background": "green",
-                "customTitle": "Epic Labs",
+                "customTitle": "Epic Labs"
             }
         }, {
             "url": "https://stackoverflow.com/",
@@ -68,9 +68,10 @@ Please, refer to the example below:
                 "top": "10px",
                 "left": "10px",
                 "border": "1px solid black",
-                "background": "green",
+                "background": "green"
             }
-        }]
+        }
+    ]
 }
 ```
 
