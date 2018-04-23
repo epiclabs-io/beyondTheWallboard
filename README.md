@@ -13,7 +13,7 @@ There are two main properties to be defined:
 
     * ```refreshWhenLeave``` {boolean} Refresh the tabs after leave it (when rotation is done).
 
-    * ```fullScreen```{boolean} Starts the app in full screen mode.
+    * ```fullScreen``` {boolean} Starts the app in full screen mode.
 
 2. ```tabs``` will contain an array defining each one of the tabs to be opened along with options related to that specifical tab:
 

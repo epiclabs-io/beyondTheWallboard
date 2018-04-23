@@ -86,4 +86,18 @@ document.getElementById('configLocalFilePath').addEventListener('change', onConf
 
 document.addEventListener('DOMContentLoaded', function () {
   updateCurrentSettings();
+  document.getElementById('local-settings').style.visibility = 'hidden';
+  document.getElementById('external-settings').style.visibility = 'hidden';
 });
+
+document.getElementById('localOrExternalForm').addEventListener('click', showOrHideLocalOrExternal);
+
+function showOrHideLocalOrExternal() {
+  if (document.getElementsByName('radioButton')[0].checked) {
+    document.getElementById('local-settings').style.visibility = 'visible';
+    document.getElementById('external-settings').style.visibility = 'hidden';
+  } else if (document.getElementsByName('radioButton')[1].checked) {
+    document.getElementById('local-settings').style.visibility = 'hidden';
+    document.getElementById('external-settings').style.visibility = 'visible';
+  }
+}
