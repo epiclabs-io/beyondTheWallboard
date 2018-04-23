@@ -54,3 +54,11 @@ h1 {
   color: darkgray;
   padding-left: 30px;
 }
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}

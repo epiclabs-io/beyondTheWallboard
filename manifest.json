@@ -18,7 +18,8 @@
 	   "tabs",
 	   "idle",
 	   "storage",
-	   "activeTab",
+       "activeTab",
+       "alarms",
         "*://*/*",
         "<all_urls>"
     ],

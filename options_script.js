@@ -6,26 +6,32 @@ function updateCurrentSettings() {
     if (Object.keys(result).length == 0) {
       document.getElementById('current-settings-placeholder').innerHTML = 'No config available. Please load some configuration file.'
     } else {
-        document.getElementById('current-settings-placeholder').innerHTML = JSON.stringify(result, null, 2);
+      document.getElementById('current-settings-placeholder').innerHTML = JSON.stringify(result, null, 2);
     }
   });
 }
 
 function saveOptions() {
   var configLocalFilePath = document.getElementById('configLocalFilePath').value;
-
+  
   if (newSettings !== undefined) {
     document.getElementById('status').innerHTML = 'Saving options';
 
-    chrome.storage.sync.set({ settings: newSettings }, function () {
-      updateCurrentSettings();
-      setTimeout(function () {
-        document.getElementById('status').innerHTML = '';
-      }, 2000);
-    });
+    updateChromeStorageSettings(newSettings);
   } else {
     document.getElementById('status').innerHTML = 'No options provided or invalid config file';
   }
+}
+
+function updateChromeStorageSettings(newSettings) {
+  chrome.storage.sync.set({
+    settings: newSettings
+  }, function () {
+    updateCurrentSettings();
+    setTimeout(function () {
+      document.getElementById('status').innerHTML = '';
+    }, 2000);
+  });
 }
 
 function onConfigLocalFilePathChange(event) {
@@ -42,10 +48,40 @@ function onConfigLocalFilePathChange(event) {
   reader.readAsText(files[0]);
 }
 
+function loadExternalOptions() {
+  var configExternalUrl = document.getElementById('externalJsonUrl').value;
+  var reloadTime = document.getElementById('reloadTime').value;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", configExternalUrl, true);
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState == 4) {
+      // JSON.parse does not evaluate the attacker's scripts.
+      var resp = JSON.parse(xhr.responseText);
+      resp.configExternalUrl = configExternalUrl;
+      console.log(resp);
+      updateChromeStorageSettings(resp);
+      sendInitTimerToLoadExternalConfigEvent(reloadTime);
+    }
+  }
+  xhr.send();
+
+}
+
+function sendInitTimerToLoadExternalConfigEvent(reloadTime) {
+  if (!isNaN(reloadTime)) {
+    chrome.runtime.sendMessage({configReloadTime: reloadTime});
+  }
+}
+
 document.getElementById('configLocalFilePath').addEventListener('change', onConfigLocalFilePathChange, false);
 
 [].forEach.call(document.querySelectorAll('.save-btn'), function (btn) {
   btn.addEventListener('click', saveOptions);
+});
+
+[].forEach.call(document.querySelectorAll('.load-ext-btn'), function (btn) {
+  btn.addEventListener('click', loadExternalOptions);
 });
 
 document.addEventListener('DOMContentLoaded', function () {
