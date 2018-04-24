@@ -10,11 +10,36 @@
 
   <h1>Beyond the wallboard</h1>
 
-  <div id="settings">
-    <input id="configLocalFilePath" name="configLocalFilePath" type="file">
-    <button id="save" class="save-btn">Save</button>
-    <span id="status"></span>
+  <div id="settings" class="settings">
+    <div class="localOrExternal">
+      <label>How are you configuring the Wallboard?</label>
+      <form id="localOrExternalForm" action="">
+        <input type="radio" name="radioButton"> Local JSON
+        <br>
+        <input type="radio" name="radioButton"> External URL
+        <br>
+      </form>
+    </div>
   </div>
+
+  <div class="margin-top-20 settings">
+      <div id="local-settings">
+        <label>Choose a local file</label>
+        <br>
+        <input id="configLocalFilePath" name="configLocalFilePath" type="file">
+        <button id="save" class="save-btn">Save</button>
+        <span id="status"></span>
+      </div>
+      <div id="external-settings">
+        <label for="externalJsonUrl">Introduce an External URL to load JSON: </label>
+        <input id="externalJsonUrl" name="externalJsonUrl" type="text">
+        <br>
+        <label for="reloadTime">Reload every X hours (leave empty for one time load): </label>
+        <input id="reloadTime" name="reloadTime" type="text">
+        <button id="loadExternalConfig" class="load-ext-btn">Load External Configuration</button>
+      </div>
+    </div>
+
 
   <div id="current-settings">
     <pre id="current-settings-placeholder"></pre>

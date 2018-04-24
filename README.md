@@ -13,6 +13,8 @@ There are two main properties to be defined:
 
     * ```refreshWhenLeave``` {boolean} Refresh the tabs after leave it (when rotation is done).
 
+    * ```fullScreen``` {boolean} Starts the app in full screen mode.
+
 2. ```tabs``` will contain an array defining each one of the tabs to be opened along with options related to that specifical tab:
 
     * ```url``` {string} The URL to be loaded.
@@ -101,6 +103,7 @@ Please, refer to the example below:
 - 2018/04/06 - New feature: stop rotating when interacting. -Lucas
 - 2018/04/06 - Fixed check undefined variable. -Lucas
 - 2018/04/06 - Removed autostart from configuration file and updated README. -Adrian
+- 2018/04/23 - Added fullScreen parameter. Added possibility of fetch JSON from external URL every X hours. -Lucas
 
 ## Authors
 

@@ -2,7 +2,8 @@
     "general": {
         "timeInterval": 10,
         "refreshWhenLeave": true,
-        "rotateOnlyWhenInactive": true
+        "rotateOnlyWhenInactive": true,
+        "fullScreen": true
     },
     "tabs":
         [{

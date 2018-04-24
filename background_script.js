@@ -69,11 +69,14 @@ function closeAllTabs(config) {
 
 function createWindow(config) {
   var urls = config.tabs.map(tab => tab.url);
-  chrome.windows.create({url: urls}, function (win) {
-    for (var i=0; i< win.tabs.length; i++) {
+  chrome.windows.create({
+    url: urls,
+    state: config.general.fullScreen ? 'fullscreen' : 'normal'
+  }, function (win) {
+    for (var i = 0; i < win.tabs.length; i++) {
       config.tabs[i].id = win.tabs[i].id;
     }
-      initInstance(config);
+    initInstance(config);
   });
 }
 
@@ -87,6 +90,7 @@ chrome.browserAction.onClicked.addListener(function () {
     } else {
       instance.stop();
       updateBadgeForInstance(instance);
+      instance = undefined;
     }
   });
 });
