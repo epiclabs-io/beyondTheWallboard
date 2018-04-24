@@ -43,6 +43,7 @@ chrome.runtime.onMessage.addListener(
     if (request.configReloadTime) {
       initBeyondTheWallboard();
       var instance = instances[sender.tab.windowId];
+      instance.settings.configReloadTime = request.configReloadTime;
       chrome.alarms.create('checkJsonChanges', {
         periodInMinutes: 60 * request.configReloadTime
       });
@@ -69,6 +70,7 @@ function loadAndRestartInstance() {
 
         // set properties so that JSONs will match
         resp.configExternalUrl = instance.settings.configExternalUrl;
+        resp.configReloadTime = instance.settings.configReloadTime;
         for (var i = 0; i < instance.settings.tabs.length; i++) {
           resp.tabs[i].id = instance.settings.tabs[i].id;
         }
@@ -94,7 +96,6 @@ ReloadPlugin.prototype.getActiveTab = function (cb) {
     'active': true,
     'windowId': self.currentWindow
   }, function (tab) {
-    console.log(tab);
     cb(tab[0]);
   });
 };

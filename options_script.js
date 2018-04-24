@@ -6,6 +6,14 @@ function updateCurrentSettings() {
     if (Object.keys(result).length == 0) {
       document.getElementById('current-settings-placeholder').innerHTML = 'No config available. Please load some configuration file.'
     } else {
+      console.log(result);
+      if (result.settings.configExternalUrl) {
+        document.getElementsByName('radioButton')[0].checked = false;
+        document.getElementsByName('radioButton')[1].checked = true;
+        document.getElementById('external-settings').style.display = 'block';
+        document.getElementById('externalJsonUrl').value = result.settings.configExternalUrl;
+        document.getElementById('reloadTime').value = result.settings.configReloadTime ? result.settings.configReloadTime : '';
+      }
       document.getElementById('current-settings-placeholder').innerHTML = JSON.stringify(result, null, 2);
     }
   });
@@ -50,7 +58,7 @@ function onConfigLocalFilePathChange(event) {
 
 function loadExternalOptions() {
   var configExternalUrl = document.getElementById('externalJsonUrl').value;
-  var reloadTime = document.getElementById('reloadTime').value;
+  var configReloadTime = document.getElementById('reloadTime').value;
 
   var xhr = new XMLHttpRequest();
   xhr.open("GET", configExternalUrl, true);
@@ -59,9 +67,9 @@ function loadExternalOptions() {
       // JSON.parse does not evaluate the attacker's scripts.
       var resp = JSON.parse(xhr.responseText);
       resp.configExternalUrl = configExternalUrl;
-      console.log(resp);
+      resp.configReloadTime = configReloadTime;
       updateChromeStorageSettings(resp);
-      sendInitTimerToLoadExternalConfigEvent(reloadTime);
+      sendInitTimerToLoadExternalConfigEvent(configReloadTime);
     }
   }
   xhr.send();
@@ -86,18 +94,18 @@ document.getElementById('configLocalFilePath').addEventListener('change', onConf
 
 document.addEventListener('DOMContentLoaded', function () {
   updateCurrentSettings();
-  document.getElementById('local-settings').style.visibility = 'hidden';
-  document.getElementById('external-settings').style.visibility = 'hidden';
+  document.getElementById('local-settings').style.display = 'none';
+  document.getElementById('external-settings').style.display = 'none';
 });
 
 document.getElementById('localOrExternalForm').addEventListener('click', showOrHideLocalOrExternal);
 
 function showOrHideLocalOrExternal() {
   if (document.getElementsByName('radioButton')[0].checked) {
-    document.getElementById('local-settings').style.visibility = 'visible';
-    document.getElementById('external-settings').style.visibility = 'hidden';
+    document.getElementById('local-settings').style.display = 'block';
+    document.getElementById('external-settings').style.display = 'none';
   } else if (document.getElementsByName('radioButton')[1].checked) {
-    document.getElementById('local-settings').style.visibility = 'hidden';
-    document.getElementById('external-settings').style.visibility = 'visible';
+    document.getElementById('local-settings').style.display = 'none';
+    document.getElementById('external-settings').style.display = 'block';
   }
 }
