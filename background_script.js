@@ -90,6 +90,7 @@ chrome.browserAction.onClicked.addListener(function () {
     } else {
       instance.stop();
       updateBadgeForInstance(instance);
+      instance = undefined;
     }
   });
 });

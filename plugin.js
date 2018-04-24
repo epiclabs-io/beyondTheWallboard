@@ -38,15 +38,19 @@ chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.eventCaptured) {
       var instance = instances[sender.tab.windowId];
-      instance.startTimer(sender.tab.id);
+      if (instance && instance.isGoing) {
+        instance.startTimer(sender.tab.id);
+      }
     }
     if (request.configReloadTime) {
       initBeyondTheWallboard();
       var instance = instances[sender.tab.windowId];
-      instance.settings.configReloadTime = request.configReloadTime;
-      chrome.alarms.create('checkJsonChanges', {
-        periodInMinutes: 60 * request.configReloadTime
-      });
+      if (instance) {
+        instance.settings.configReloadTime = request.configReloadTime;
+        chrome.alarms.create('checkJsonChanges', {
+          periodInMinutes: 60 * request.configReloadTime
+        });
+      }
     }
   }
 );
@@ -60,34 +64,36 @@ function loadAndRestartInstance() {
     populate: true
   }, function (win) {
     var instance = getInstance(win.id);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", instance.settings.configExternalUrl, true);
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == 4) {
-        // JSON.parse does not evaluate the attacker's scripts.
-        var resp = JSON.parse(xhr.responseText);
-
-        // set properties so that JSONs will match
-        resp.configExternalUrl = instance.settings.configExternalUrl;
-        resp.configReloadTime = instance.settings.configReloadTime;
-        for (var i = 0; i < instance.settings.tabs.length; i++) {
-          resp.tabs[i].id = instance.settings.tabs[i].id;
-        }
-
-        var areTheyEqual = deepEqual(instance.settings, resp);
-
-        if (!areTheyEqual) {
-          instance.settings = resp;
-          chrome.storage.sync.set({
-            settings: instance.settings
-          }, function () {
-            initBeyondTheWallboard();
-          });
+    if (instance) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", instance.settings.configExternalUrl, true);
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4) {
+          // JSON.parse does not evaluate the attacker's scripts.
+          var resp = JSON.parse(xhr.responseText);
+  
+          // set properties so that JSONs will match
+          resp.configExternalUrl = instance.settings.configExternalUrl;
+          resp.configReloadTime = instance.settings.configReloadTime;
+          for (var i = 0; i < instance.settings.tabs.length; i++) {
+            resp.tabs[i].id = instance.settings.tabs[i].id;
+          }
+  
+          var areTheyEqual = deepEqual(instance.settings, resp);
+  
+          if (!areTheyEqual) {
+            instance.settings = resp;
+            chrome.storage.sync.set({
+              settings: instance.settings
+            }, function () {
+              initBeyondTheWallboard();
+            });
+          }
         }
       }
+      xhr.send();
     }
-    xhr.send();
+
   });
 }
 
