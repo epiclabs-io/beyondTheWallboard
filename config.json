@@ -5,8 +5,8 @@
         "refreshWhenLeave": true,
         "rotateOnlyWhenInactive": true
     },
-    "tabs":
-        [{
+    "tabs": [
+        {
             "url": "https://epiclabs.atlassian.net/plugins/servlet/Wallboard/?dashboardId=10400",
             "refreshWhenLeave": true,
             "postitTitle": {}
@@ -16,7 +16,7 @@
             "postitTitle": {
                 "color": "green",
                 "top": "13px",
-		"customTitle": "Burndown chart",
+                "customTitle": "Burndown chart",
                 "left": "260px",
                 "border": "1px grey black",
                 "background": "black"
@@ -27,7 +27,7 @@
             "postitTitle": {
                 "color": "green",
                 "top": "13px",
-		"customTitle": "FLEX Kanban",
+                "customTitle": "FLEX Kanban",
                 "left": "114px",
                 "border": "1px grey black",
                 "background": "black"
@@ -37,72 +37,62 @@
             "refreshWhenLeave": false,
             "postitTitle": {}
         }, {
-	    "url": "https://epiclabs.atlassian.net/plugins/servlet/Wallboard/?dashboardId=11305",
+            "url": "https://epiclabs.atlassian.net/plugins/servlet/Wallboard/?dashboardId=11305",
             "refreshWhenLeave": true,
             "postitTitle": {
                 "color": "green",
                 "top": "13px",
-		"customTitle": "MKT Kanban",
+                "customTitle": "MKT Kanban",
                 "left": "114px",
                 "border": "1px grey black",
                 "background": "black"
             }
-	}, {
-	   "url": "https://epiclabs.atlassian.net/plugins/servlet/Wallboard/?dashboardId=11306",
-	   "refreshWhenLeave": true,
+        }, {
+            "url": "https://epiclabs.atlassian.net/plugins/servlet/Wallboard/?dashboardId=11306",
+            "refreshWhenLeave": true,
             "postitTitle": {
                 "color": "green",
                 "top": "13px",
-		"customTitle": "WUAKI Kanban",
+                "customTitle": "WUAKI Kanban",
                 "left": "114px",
                 "border": "1px grey black",
                 "background": "black"
             }
-	}, {
-	   "url": "https://epiclabs.atlassian.net/plugins/servlet/Wallboard/?dashboardId=11307",
-	   "refreshWhenLeave": true,
+        }, {
+            "url": "https://epiclabs.atlassian.net/plugins/servlet/Wallboard/?dashboardId=11307",
+            "refreshWhenLeave": true,
             "postitTitle": {
                 "color": "green",
                 "top": "13px",
-		"customTitle": "DUNGEON Kanban",
+                "customTitle": "DUNGEON Kanban",
                 "left": "325px",
                 "border": "1px grey black",
                 "background": "black"
             }
-	}, {
-	   "url": "http://services.w3.org/xslt?xslfile=http%3A%2F%2Fwww.epiclabs.io%2Fxkcd%2Fxkcd.xsl&xmlfile=http%3A%2F%2Fxkcd.com%2Frss.xml&transform=Submit",
-       "timeInterval": 20,
-       "refreshWhenLeave": false,
-       "postitTitle": {}
-	}, {
-       "url": "https://epiclabs-io.slack.com/messages/C10L9FGG6/",
-       "refreshWhenLeave": false,
-       "postitTitle": {}
-	}, {
-       "url": "https://aedifex.epiclabs.io/view/Build%20Monitor/",
-       "refreshWhenLeave": false,
-       "postitTitle": {}
-	}, {
-        "url": "https://outlook.office365.com/owa/calendar/c80668dde807432893339144a6f3d7ad@epiclabs.io/00cb31ccb0ec4d829c9444066a61c0ad16479456584755251109/calendar.html",
-        "refreshWhenLeave": true,
-             "postitTitle": {
-                 "color": "green",
-                 "top": "8px",
-         "customTitle": "Team Calendar",
-                 "left": "339px",
-                 "border": "1px grey black",
-                 "background": "black"
-             }
-     }, {
-        "url": "https://www.dominospizza.es/Usuario/ConsultarPedido?v0WWZOaHr8fsvcfiEbReAXTFbLcABOiEFGD8doszoMI/sCNQYKzoNJcpXPepOgep",
-        "refreshWhenLeave": true,
-        "postitTitle": {
-            "color": "green",
-            "top": "8px",
-            "customTitle": "Comida!",
-            "left": "339px",
-            "border": "1px grey black",
-            "background": "black"
+        }, {
+            "url": "http://services.w3.org/xslt?xslfile=http%3A%2F%2Fwww.epiclabs.io%2Fxkcd%2Fxkcd.xsl&xmlfile=http%3A%2F%2Fxkcd.com%2Frss.xml&transform=Submit",
+            "timeInterval": 20,
+            "refreshWhenLeave": false,
+            "postitTitle": {}
+        }, {
+            "url": "https://epiclabs-io.slack.com/messages/C10L9FGG6/",
+            "refreshWhenLeave": false,
+            "postitTitle": {}
+        }, {
+            "url": "https://aedifex.epiclabs.io/view/Build%20Monitor/",
+            "refreshWhenLeave": false,
+            "postitTitle": {}
+        }, {
+            "url": "https://outlook.office365.com/owa/calendar/c80668dde807432893339144a6f3d7ad@epiclabs.io/00cb31ccb0ec4d829c9444066a61c0ad16479456584755251109/calendar.html",
+            "refreshWhenLeave": true,
+            "postitTitle": {
+                "color": "green",
+                "top": "8px",
+                "customTitle": "Team Calendar",
+                "left": "339px",
+                "border": "1px grey black",
+                "background": "black"
+            }
         }
-     }]
+    ]
 }
