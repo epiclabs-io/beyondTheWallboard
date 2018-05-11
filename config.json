@@ -3,7 +3,8 @@
         "timeInterval": 10,
         "autoStart": true,
         "refreshWhenLeave": true,
-        "rotateOnlyWhenInactive": true
+        "rotateOnlyWhenInactive": true,
+        "fullScreen": true
     },
     "tabs": [
         {
