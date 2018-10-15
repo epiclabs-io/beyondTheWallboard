@@ -97,11 +97,56 @@ chrome.browserAction.onClicked.addListener(function () {
 
 chrome.windows.onFocusChanged.addListener(activeWindowChange);
 
+function initBeyondTheWallboard(url) {
+  if (url) {
+    loadExternalOptions(url, initBeyondTheWallboard);
+  } else {
+    chrome.storage.sync.get('settings', (settings) => {
+      closeAllTabs(settings.settings);
+    });
+  }
+}
 
-function initBeyondTheWallboard() {
-  chrome.storage.sync.get('settings', (settings) => {
-    closeAllTabs(settings.settings);
+chrome.windows.onCreated.addListener(function (win) {
+  chrome.tabs.query({
+    currentWindow: true
+  }, function (tabs) {
+    if (tabs.length == 1 && tabs[0].url.indexOf("json") > -1) {
+      initBeyondTheWallboard(tabs[0].url);
+    }
   });
+});
+
+function loadExternalOptions(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState == 4) {
+      // JSON.parse does not evaluate the attacker's scripts.
+      var resp = JSON.parse(xhr.responseText);
+      resp.configExternalUrl = url;
+      resp.configReloadTime = 1;
+      updateChromeStorageSettings(resp);
+      sendInitTimerToLoadExternalConfigEvent(resp.configReloadTime);
+      if (callback) {
+        callback();
+      }
+    }
+  }
+  xhr.send();
+}
+
+function updateChromeStorageSettings(newSettings) {
+  chrome.storage.sync.set({
+    settings: newSettings
+  }, function () {
+  });
+}
+
+function sendInitTimerToLoadExternalConfigEvent(reloadTime) {
+  if (!isNaN(reloadTime)) {
+    chrome.runtime.sendMessage({configReloadTime: reloadTime});
+  }
 }
 
 function initInstance(config) {
